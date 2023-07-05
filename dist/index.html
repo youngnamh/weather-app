@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../src/style/styles.css" />
+  <script defer src="index.bundle.js"></script></head>
+  <body>
+    <div class="container">
+      <form method="GET" id="addForm">
+        <label for="city_name">City:</label>
+        <input
+          type="text"
+          id="city_name"
+          name="city_name"
+          placeholder="toronto"
+          required
+        />
+        <button type="button" id="add-btn">Add</button>
+      </form>
+      <div class="cities">
+        <div class="cityBox">
+          <div class="today">
+            <div class="cityInfo">
+              <div class="cityName">Toronto</div>
+              <div class="cityTime">10:30</div>
+            </div>
+
+            <div class="conditions">
+              <div class="currentTemp">20°C</div>
+              <div class="condition">Mostly Sunny</div>
+              <div class="todayHighLows">
+                <span class="todayHigh">H: 20</span>
+                <span class="todayLow">L: 10</span>
+              </div>
+            </div>
+          </div>
+          <div class="week">
+            <div class="day">
+              Monday
+              <img src="../src/images/sunny.png" class="dayPic" />
+              <div class="highLows">
+                <span class="high">25</span>
+                <span class="low">10</span>
+              </div>
+            </div>
+            <div class="day">
+              Tuesday
+              <img src="../src/images/sunny.png" class="dayPic" />
+              <div class="highLows">
+                <span class="high">25</span>
+                <span class="low">10</span>
+              </div>
+            </div>
+            <div class="day">
+              Wednesday
+              <img src="../src/images/sunny.png" class="dayPic" />
+              <div class="highLows">
+                <span class="high">25</span>
+                <span class="low">10</span>
+              </div>
+            </div>
+            <div class="day">
+              Thursday
+              <img src="../src/images/sunny.png" class="dayPic" />
+              <div class="highLows">
+                <span class="high">25</span>
+                <span class="low">10</span>
+              </div>
+            </div>
+            <div class="day">
+              Friday
+              <img src="../src/images/sunny.png" class="dayPic" />
+              <div class="highLows">
+                <span class="high">25</span>
+                <span class="low">10</span>
+              </div>
+            </div>
+            <div class="day">
+              Saturday
+              <img src="../src/images/sunny.png" class="dayPic" />
+              <div class="highLows">
+                <span class="high">25</span>
+                <span class="low">10</span>
+              </div>
+            </div>
+            <div class="day">
+              Sunday
+              <img
+                src="//cdn.weatherapi.com/weather/64x64/day/302.png"
+                class="dayPic"
+              />
+              <div class="highLows">
+                <span class="high">25</span>
+                <span class="low">10</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const key = "65813105b47048debe6145016230507";
+      const baseUrl = "http://api.weatherapi.com/v1";
+      const days = 8;
+      let request =
+        baseUrl + "/forecast.json?key=" + key + "&q=london&days=" + days;
+
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            console.log("success");
+            return response.json();
+          } else {
+            console.log("Not SUccessful");
+          }
+        })
+        .then((data) => console.log(data.forecast))
+        .catch((err) => console.log("Weather API error: " + err));
+    </script>
+  </body>
+</html>
