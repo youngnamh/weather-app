@@ -1,6 +1,7 @@
 class City {
-  constructor(name) {
+  constructor(name, weeklyForcast) {
     this.name = name;
+    this.weeklyForcast = weeklyForcast;
   }
 }
 
@@ -26,37 +27,40 @@ class CityDay {
     this.chanceOfRain = chanceOfRain;
     this.chanceOfSnow = chanceOfSnow;
   }
-
-  printInfo() {
-    console.log(this.date);
-    console.log(this.max);
-    console.log(this.min);
-    console.log(this.condition);
-    console.log(this.chanceOfRain);
-    console.log(this.chanceOfSnow);
-  }
 }
 
-function processData(data) {
-  const date = data.forecastday[0].date;
-  const maxC = Math.round(data.forecastday[0].day.maxtemp_c);
-  const maxF = Math.round(data.forecastday[0].day.maxtemp_f);
-  const minC = Math.round(data.forecastday[0].day.mintemp_c);
-  const minF = Math.round(data.forecastday[0].day.mintemp_f);
-  const condition = data.forecastday[0].day.condition.text;
-  const icon = data.forecastday[0].day.condition.icon;
-  const chanceOfRain = data.forecastday[0].day.daily_chance_of_rain;
-  const chanceOfSnow = data.forecastday[0].day.daily_chance_of_snow;
+function processData(city, data) {
+  const arrayOfDays = [];
 
-  console.log(date);
-  console.log(maxC);
-  console.log(minC);
-  console.log(maxF);
-  console.log(minF);
-  console.log(condition);
-  console.log(chanceOfRain);
-  console.log(chanceOfSnow);
-  console.log(icon);
+  //loop through the 8 days and make a cityDay obj for each day
+  //populate the array
+  for (let i = 0; i < data.forecastday.length; i++) {
+    const date = data.forecastday[i].date;
+    const maxC = Math.round(data.forecastday[i].day.maxtemp_c);
+    const maxF = Math.round(data.forecastday[i].day.maxtemp_f);
+    const minC = Math.round(data.forecastday[i].day.mintemp_c);
+    const minF = Math.round(data.forecastday[i].day.mintemp_f);
+    const condition = data.forecastday[i].day.condition.text;
+    const icon = data.forecastday[i].day.condition.icon;
+    const chanceOfRain = data.forecastday[i].day.daily_chance_of_rain;
+    const chanceOfSnow = data.forecastday[i].day.daily_chance_of_snow;
+
+    let day = new CityDay(
+      date,
+      maxC,
+      maxF,
+      minC,
+      minF,
+      condition,
+      icon,
+      chanceOfRain,
+      chanceOfSnow
+    );
+    arrayOfDays.push(day);
+  }
+  //create a city with a complete forecast
+  let completeCity = new City(city, arrayOfDays);
+  return completeCity;
 }
 
 function getForecast(city) {
@@ -66,7 +70,7 @@ function getForecast(city) {
   let request =
     baseUrl + "/forecast.json?key=" + key + "&q=" + city + "&days=" + days;
 
-  fetch(request)
+  return fetch(request)
     .then((response) => {
       if (response.ok) {
         console.log("success");
@@ -78,54 +82,28 @@ function getForecast(city) {
     })
     .then((data) => {
       //console.log(data.forecast);
-      processData(data.forecast);
-      return data.forecast;
+      return processData(city, data.forecast);
     })
     .catch((err) => console.log("Weather API error: " + err));
 }
 
-getForecast("london");
-
-/*let counter = 0;
-forecast.array.forEach((element) => {
-  console.log("day " + counter);
-  console.log(element);
-  counter++;
+getForecast("london").then((london) => {
+  console.log(london);
 });
 
-/*
-  // URL (required), options (optional)
-  fetch(request)
-    .then((response) => {
-      if (response.ok) {
-        console.log("success");
-        return response.json();
-      } else {
-        console.log("Not SUccessful");
-      }
-    })
-    .then((data) => console.log(data.forecast))
-    .catch(err, () => {
-      console.log("Weather API error: " + err);
-      return err;
-    });
-}
-
-//let request = https://api.weatherapi.com/v1/forecast.json?key=11111111111111111&q=london
-
-/*
-class cityManager {
-  constructor() {
-    const listOfCities = [];
-    this.listOfCities = listOfCities;
-  }
-
-  add(city) {
-    if (this.listOfCities.includes(city)) {
-      console.log("Error: city already exists");
-    } else {
-      this.listOfCities.push(city);
-    }
+/*async funtion asdf() {
+  try {
+    response = await fetch();
+    data = await response.json();
+    return processData();
+  catch (err) {
+    console.log();
   }
 }
+
+let london = getForecast("london");
+asdf().then(() => {
+  console.log("London: " + london);
+})
+
 */
