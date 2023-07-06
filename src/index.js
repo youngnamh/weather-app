@@ -1,5 +1,6 @@
 import "./style/styles.css";
 import makeCity from "./makeCity";
+import getForecast from "./jsonHandler";
 
 //assign eventListener to add button
 const addBtn = document.querySelector("#add-btn");
@@ -10,9 +11,10 @@ addBtn.addEventListener("click", () => {
   if (cityName === "") {
     console.log("Error: no inputted cityName");
   } else {
-    console.log("city: " + cityName);
-    console.log(cityInput);
-    makeCity(cityName);
+    getForecast(cityName).then((city) => {
+      //console.log(london.weeklyForecast);
+      makeCity(city);
+    });
     cityInput.value = "";
   }
 });
